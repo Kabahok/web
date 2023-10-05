@@ -5,12 +5,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
     final List<String> validPaths = List.of("/index.html", "/spring.svg", "/spring.png", "/resources.html", "/styles.css", "/app.js", "/links.html", "/forms.html", "/classic.html", "/events.html", "/events.js");
-
+    Map<String, ConcurrentHashMap<String, Handler>> handlers = new ConcurrentHashMap<>();
     private int port;
     private ExecutorService pool;
 
@@ -20,31 +22,38 @@ public class Server {
     }
 
     public void start() {
-        while (true) {
             try(final var serverSocket = new ServerSocket(port)) {
                 System.out.println("Server started");
                 while (!serverSocket.isClosed()) {
                     try (final var socket = serverSocket.accept()) {
                         pool.execute(() -> {
-                            connectionProcessing(socket);
+                            try {
+                                connectionProcessing(socket);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         });
                         System.out.println("New connection");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        pool.shutdown();
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
     }
 
-    public void connectionProcessing(Socket socket) {
-        try {
+    public void connectionProcessing(Socket socket) throws IOException {
+
             final var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             final var out = new BufferedOutputStream(socket.getOutputStream());
             final var requestLine = in.readLine();
             final var parts = requestLine.split(" ");
 
             if (parts.length != 3) {
+                socket.close();
                 return;
             }
 
@@ -90,9 +99,6 @@ public class Server {
             ).getBytes());
             Files.copy(filePath, out);
             out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }
