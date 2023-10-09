@@ -67,6 +67,7 @@ public class Server {
                 final var template = Files.readString(filePath);
                 final var content = template.replace("{time}", LocalDateTime.now().toString()).getBytes();
 
+
                 out.write((
                         "HTTP/1.1 200 OK\r\n" +
                                 "Content-Type: " + mimeType + "\r\n" +
