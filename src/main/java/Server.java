@@ -21,16 +21,21 @@ public class Server {
 
     public void start() {
         while (true) {
-            try(final var serverSocket = new ServerSocket(port)) {
+            try {
+                final var serverSocket = new ServerSocket(port);
                 System.out.println("Server started");
                 while (!serverSocket.isClosed()) {
-                    try (final var socket = serverSocket.accept()) {
+                    try {
+                        final var socket = serverSocket.accept();
                         pool.execute(() -> {
                             connectionProcessing(socket);
                         });
                         System.out.println("New connection");
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
+                pool.shutdown();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -41,6 +46,9 @@ public class Server {
         try {
             final var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             final var out = new BufferedOutputStream(socket.getOutputStream());
+
+            final var request= new ParseRequest().parseRequest(socket);
+
             final var requestLine = in.readLine();
             final var parts = requestLine.split(" ");
 

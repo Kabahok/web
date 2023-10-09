@@ -1,29 +1,41 @@
+import java.util.Map;
+
 public class Request {
 
     private String method;
-    private String headers;
+    private Map<String, String> headers;
     private String body;
+    private String path;
 
-    public Request(String method, String headers, String body) {
+    public Request() {
+    }
+
+    public Request(String method, Map<String, String> headers, String path, String body) {
         this.method = method;
         this.headers = headers;
+        this.path = path;
         this.body = body;
     }
 
-    public Request(String method, String headers) {
+    public Request(String method, Map<String, String> headers, String path) {
         this.method = method;
         this.headers = headers;
+        this.path = path;
     }
 
     public String getMethod() {
         return method;
     }
 
-    public String getHeaders() {
+    public Map<String, String> getHeaders() {
         return headers;
     }
 
     public String getBody() {
         return body;
+    }
+
+    public String getPath() {
+        return path;
     }
 }
