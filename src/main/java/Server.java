@@ -1,9 +1,11 @@
 import handlers.Handler;
+import org.apache.http.NameValuePair;
 import request.ParseRequest;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -14,7 +16,7 @@ import java.util.concurrent.Executors;
 
 public class Server {
     private ConcurrentHashMap<String, ConcurrentHashMap<String, Handler>> handlers = new ConcurrentHashMap<>();
-    final private List<String> validPaths = List.of("/index.html", "/spring.svg", "/spring.png", "/resources.html", "/styles.css", "/app.js", "/links.html", "/forms.html", "/classic.html", "/events.html", "/events.js");
+    final private List<String> validPaths = List.of("/messages","/index.html", "/spring.svg", "/spring.png", "/resources.html", "/styles.css", "/app.js", "/links.html", "/forms.html", "/classic.html", "/events.html", "/events.js");
 
     private int port;
     private ExecutorService pool;
@@ -56,6 +58,25 @@ public class Server {
             if (request == null) {
                 return;
             }
+
+// --------------------------------------------------------------------------------
+// ----------------------Проверка парсинга Query String----------------------------
+// --------------------------------------------------------------------------------
+//            try {
+////              ---------------------------------------------
+//                System.out.println(request.getPathOfQuery());
+//
+////              ---------------------------------------------
+//                for (NameValuePair param : request.getQueryParams()) {
+//                    System.out.printf("%s: %s\n", param.getName(), param.getValue());
+//                }
+//
+////              ---------------------------------------------
+//                System.out.println(request.getQueryParam("login"));
+//                System.out.println(request.getQueryParam("password"));
+//            } catch (URISyntaxException e) {
+//                e.printStackTrace();
+//            }
 
             final var path = request.getPath();
             if (!validPaths.contains(path)) {
