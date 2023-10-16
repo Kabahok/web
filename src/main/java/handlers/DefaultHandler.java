@@ -4,6 +4,7 @@ import request.Request;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -11,8 +12,8 @@ import java.util.List;
 public class DefaultHandler implements Handler{
 
     @Override
-    public void handle(Request request, BufferedOutputStream responseStream) throws IOException {
-        final var path = request.getPath();
+    public void handle(Request request, BufferedOutputStream responseStream) throws IOException, URISyntaxException {
+        final var path = request.getPathOfQuery();
         final var filePath = Path.of(".", "public", path);
         final var mimeType = Files.probeContentType(filePath);
         final var size = Files.size(filePath);

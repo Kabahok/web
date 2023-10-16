@@ -13,6 +13,7 @@ public class Main {
             server.addHandler("GET", "/messages", new DefaultHandler());
             server.addHandler("POST", "/messages", new DefaultHandler());
             server.addHandler("GET", "/index.html", new DefaultHandler());
+            server.addHandler("POST", "/index.html", new DefaultHandler());
             server.addHandler("GET", "/classic.html", new ClassicHandler());
 
             server.start();

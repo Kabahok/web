@@ -62,21 +62,22 @@ public class Server {
 // --------------------------------------------------------------------------------
 // ----------------------Проверка парсинга Query String----------------------------
 // --------------------------------------------------------------------------------
-//            try {
-////              ---------------------------------------------
-//                System.out.println(request.getPathOfQuery());
-//
-////              ---------------------------------------------
-//                for (NameValuePair param : request.getQueryParams()) {
-//                    System.out.printf("%s: %s\n", param.getName(), param.getValue());
-//                }
-//
-////              ---------------------------------------------
-//                System.out.println(request.getQueryParam("login"));
-//                System.out.println(request.getQueryParam("password"));
-//            } catch (URISyntaxException e) {
-//                e.printStackTrace();
-//            }
+            try {
+//              ---------------------------------------------
+                System.out.println(request.getPathOfQuery());
+                System.out.println(request.getPath() + " fdgkdjfgndjkfgnkfdg");
+
+//              ---------------------------------------------
+                for (NameValuePair param : request.getQueryParams()) {
+                    System.out.printf("%s: %s\n", param.getName(), param.getValue());
+                }
+
+//              ---------------------------------------------
+                System.out.println(request.getQueryParam("login"));
+                System.out.println(request.getQueryParam("password"));
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
 
             final var path = request.getPath();
             if (!validPaths.contains(path)) {
@@ -112,7 +113,7 @@ public class Server {
                 }
             }
 // --------------------------------------------------------------------------------
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
     }
